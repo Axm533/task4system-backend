@@ -6,21 +6,17 @@ import java.util.List;
 
 public interface UserService {
 
-    User getUserById(int id);
+    User getUserById(Long id);
 
     List<User> getAllUsers();
 
-    List<User> findAllByName(String name);
+    void saveAll(List<User> users);
 
-    List<User> findAllBySurname(String surname);
-
-    List<User> findAllByLogin(String login);
-
-    List<User> generateSampleUserData();
+    //List<User> findAllByNameOrSurnameOrLogin(String searchTerm);
 
     void saveUser(String name, String surname, String login);
 
-    void updateUser(int id, String name, String surname, String login);
+    void updateUser(Long id, String name, String surname, String login);
 
-    void deleteUser(int id);
+    void deleteUser(Long id);
 }

@@ -3,6 +3,7 @@ package com.task4system.task4system.controller;
 import com.task4system.task4system.model.User;
 import com.task4system.task4system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,28 +18,33 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/all")
-    public List<User> getAllUsers(){ return userService.getAllUsers();}
+    public ResponseEntity<List<User>> getAllUsers() {
+        try {
+            List<User> users = userService.getAllUsers();
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable int id){ return userService.getUserById(id);}
+    public User getUserById(@PathVariable Long id){ return userService.getUserById(id);}
 
-    @GetMapping("/search")
-    public ResponseEntity<List<User>> searchUserByName(@RequestParam String name){
-        List<User> users = userService.findAllByName((name));
-        return ResponseEntity.ok(users);
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadUsers(@RequestBody List<User> users) {
+        try {
+            userService.saveAll(users);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving users");
+        }
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<User>> searchUserBySurname(@RequestParam String surname){
-        List<User> users = userService.findAllByName((surname));
+    /*@GetMapping("/search")
+    public ResponseEntity<List<User>> searchUser(@RequestParam String searchTerm){
+        List<User> users = userService.findAllByNameOrSurnameOrLogin(searchTerm);
         return ResponseEntity.ok(users);
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<User>> searchUserByLogin(@RequestParam String login){
-        List<User> users = userService.findAllByName((login));
-        return ResponseEntity.ok(users);
-    }
+    }*/
 
     @PostMapping("/save")
     public ResponseEntity<String> saveUser(
@@ -52,7 +58,7 @@ public class UserController {
 
     @PostMapping("/update")
     public ResponseEntity<String> updateUser(
-            @RequestParam int id,
+            @RequestParam Long id,
             @RequestParam String name,
             @RequestParam String surname,
             @RequestParam String login
@@ -62,7 +68,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteUser(@RequestParam int id){
+    public ResponseEntity<String> deleteUser(@RequestParam Long id){
         userService.deleteUser(id);
         return ResponseEntity.ok("User deleted!");
     }

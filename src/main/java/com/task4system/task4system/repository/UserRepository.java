@@ -5,14 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    User getUserById(int id);
+    User getUserById(Long id);
 
-    List<User> findAllByNameContainingIgnoreCase(String name);
+    void deleteById(Long id);
 
-    List<User> findAllBySurnameContainingIgnoreCase(String surname);
-
-    List<User> findAllByLoginContainingIgnoreCase(String login);
+    //List<User> findAllByNameOrSurnameOrLoginContainingIgnoreCase(String searchTerm);
 
 }

@@ -15,7 +15,7 @@ public class UserServiceImplementation implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public User getUserById(int id){
+    public User getUserById(Long id){
         return userRepository.getUserById(id);
     }
 
@@ -25,28 +25,14 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public List<User> findAllByName(String name){
-        return userRepository.findAllByNameContainingIgnoreCase(name);
+    public void saveAll(List<User> users){
+        userRepository.saveAll(users);
     }
 
-    @Override
-    public List<User> findAllBySurname(String surname){
-        return userRepository.findAllBySurnameContainingIgnoreCase(surname);
-    }
-
-    @Override
-    public List<User> findAllByLogin(String login){
-        return userRepository.findAllByLoginContainingIgnoreCase(login);
-    }
-
-    public List<User> generateSampleUserData() {
-        List<User> users = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            users.add(new User("name" + (i + 1), "surname" + (i + 1), "login" + (i + 1)));
-        }
-        return users;
-    }
-
+    /*@Override
+    public List<User> findAllByNameOrSurnameOrLogin(String searchTerm){
+        return userRepository.findAllByNameOrSurnameOrLoginContainingIgnoreCase(searchTerm);
+    }*/
 
     @Override
     public void saveUser(String name, String surname, String login){
@@ -54,7 +40,7 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public void updateUser(int id, String name, String surname, String login){
+    public void updateUser(Long id, String name, String surname, String login){
         User user = userRepository.getUserById(id);
         if(user != null){
             user.setName(name);
@@ -65,7 +51,7 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public void deleteUser(int id) {
+    public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 

@@ -19,7 +19,9 @@ public class WebConfig {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:3000")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .exposedHeaders("*");
+                        .allowedHeaders("Content-Type", "Authorization", "Accept")
+                        .exposedHeaders("Content-Disposition")
+                        .allowCredentials(true);
             }
         };
     }
