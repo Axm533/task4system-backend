@@ -4,6 +4,7 @@ import com.task4system.task4system.model.User;
 import com.task4system.task4system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +20,20 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public Page<User> getUsers(
+    public ResponseEntity<Page<User>> getUsers(
             @RequestParam(required = false) String search,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size,
             @RequestParam(defaultValue = "name") String sortField,
             @RequestParam(defaultValue = "asc") String sortDirection) {
-        return userService.getUsers(search, page, size, sortField, sortDirection);
+        Page<User> usersPage = userService.getUsers(search, page, size, sortField, sortDirection);
+
+        long totalPages = usersPage.getTotalPages();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-Total-Pages", String.valueOf(totalPages));
+
+        return new ResponseEntity<>(usersPage, headers, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
