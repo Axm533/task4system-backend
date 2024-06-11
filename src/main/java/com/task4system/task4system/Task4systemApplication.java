@@ -9,7 +9,7 @@ public class Task4systemApplication {
 	public static void main(String[] args) {
 
 		try {
-			JsonDataHandler.generateSampleData("users.json", 10);
+			JsonDataHandler.generateSampleData("users.json", 1000);
 		} catch(Exception e) {
 			System.out.println("Exception: " + e.getMessage());
 		}

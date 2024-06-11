@@ -3,6 +3,7 @@ package com.task4system.task4system.controller;
 import com.task4system.task4system.model.User;
 import com.task4system.task4system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +18,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<User>> getAllUsers() {
-        try {
-            List<User> users = userService.getAllUsers();
-            return ResponseEntity.ok(users);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    @GetMapping
+    public Page<User> getUsers(
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size,
+            @RequestParam(defaultValue = "name") String sortField,
+            @RequestParam(defaultValue = "asc") String sortDirection) {
+        return userService.getUsers(search, page, size, sortField, sortDirection);
     }
 
     @GetMapping("/{id}")
@@ -39,12 +40,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving users");
         }
     }
-
-    /*@GetMapping("/search")
-    public ResponseEntity<List<User>> searchUser(@RequestParam String searchTerm){
-        List<User> users = userService.findAllByNameOrSurnameOrLogin(searchTerm);
-        return ResponseEntity.ok(users);
-    }*/
 
     @PostMapping("/save")
     public ResponseEntity<String> saveUser(
@@ -65,6 +60,12 @@ public class UserController {
     ){
         userService.updateUser(id, name, surname, login);
         return ResponseEntity.ok("User updated!");
+    }
+
+    @DeleteMapping("/deleteAll")
+    public ResponseEntity<Void> deleteAllUsers() {
+        userService.deleteAllUsers();
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/delete")
