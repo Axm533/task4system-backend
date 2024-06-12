@@ -26,14 +26,19 @@ public class UserController {
             @RequestParam(defaultValue = "50") int size,
             @RequestParam(defaultValue = "name") String sortField,
             @RequestParam(defaultValue = "asc") String sortDirection) {
-        Page<User> usersPage = userService.getUsers(search, page, size, sortField, sortDirection);
+        try {
+            Page<User> usersPage = userService.getUsers(search, page, size, sortField, sortDirection);
 
-        long totalPages = usersPage.getTotalPages();
+            long totalPages = usersPage.getTotalPages();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-Total-Pages", String.valueOf(totalPages));
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("X-Total-Pages", String.valueOf(totalPages));
 
-        return new ResponseEntity<>(usersPage, headers, HttpStatus.OK);
+            return new ResponseEntity<>(usersPage, headers, HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/{id}")

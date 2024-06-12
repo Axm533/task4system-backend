@@ -9,7 +9,7 @@ public interface UserService {
 
     User getUserById(Long id);
 
-    public Page<User> getUsers(String search, int page, int size, String sortField, String sortDirection);
+    Page<User> getUsers(String search, int page, int size, String sortField, String sortDirection);
 
     void saveAll(List<User> users);
 
@@ -17,7 +17,7 @@ public interface UserService {
 
     void updateUser(Long id, String name, String surname, String login);
 
-    public void deleteAllUsers();
+    void deleteAllUsers();
 
     void deleteUser(Long id);
 }
